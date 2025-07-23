@@ -1,0 +1,13 @@
+-- Fetch Failed Transactions in the last 7 days
+SELECT 
+    T.TransactionID,
+    C.FullName AS CustomerName,
+    T.Amount,
+    T.FailureReason,
+    T.TransactionDate,
+    DATEDIFF(HOUR, T.TransactionDate, GETDATE()) AS HoursSinceFailure
+FROM Transactions T
+INNER JOIN Customers C ON T.CustomerID = C.CustomerID
+WHERE T.Status = 'FAILED'
+  AND T.TransactionDate >= DATEADD(DAY, -7, GETDATE())
+ORDER BY T.TransactionDate DESC;
